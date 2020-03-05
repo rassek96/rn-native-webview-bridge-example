@@ -34,7 +34,7 @@ public class MyWebView: UIView, WKNavigationDelegate, WKUIDelegate {
     @objc func setWebViewURL(_ val: NSString) {
         webViewURL = val
         
-        if let url = URL(string: self.webViewURL as! String) {
+        if let url = URL(string: webViewURL as! String) {
             webView.load(URLRequest(url: url))
             webView.allowsBackForwardNavigationGestures = true
         }

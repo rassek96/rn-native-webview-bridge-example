@@ -8,15 +8,30 @@
  * @format
  */
 
-import React from 'react'
-import { View, requireNativeComponent, NativeModules } from "react-native"
+import React, { useEffect } from 'react'
+import { View, requireNativeComponent, NativeModules, Platform, DeviceEventEmitter } from "react-native"
 import { WebView } from "react-native-webview"
 
 const MyWebView = requireNativeComponent("MyWebView")
 const { MyWebViewManager } = NativeModules
 
 const App = () => {
-  return (
+  useEffect(() => {
+    const onRedirect = (url: string) => {
+      console.log(url)
+    }
+    
+    DeviceEventEmitter.addListener("onRedirect", onRedirect)
+
+    return () => {
+      DeviceEventEmitter.removeListener("onRedirect", onRedirect)
+    }
+  }, [])
+
+  if (Platform.OS === "android") {
+    NativeModules.MyWebViewActivityStarter.openMyWebView("https://beanloop.se");
+    return null;
+  } else return (
     <View style={{ flex: 1 }}>
       <WebView
           nativeConfig={{
